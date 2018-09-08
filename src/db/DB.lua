@@ -1,8 +1,8 @@
 DB = {}
 
 PlayerStruct = {
-    money = "INTEGER",
-    carro = "TEXT",
+    money = {type = "INTEGER", default = "NOT NULL DEFAULT 0"},
+    carro = {type = "TEXT", default = "NULL"},
 }
 
 function DB.init()
@@ -18,8 +18,13 @@ function DB.connect()
 end
 
 function DB.alterTables()
-    local colunas = DB.getColumns("player");
-    
+    local colunas = DB.getColumns("players");
+    for k,v in pairs(PlayerStruct) do
+        if not hasValue(colunas,k) then 
+            print(k)
+            DB.conn:exec("ALTER TABLE `players` ADD COLUMN `"..k.."` "..v.type.."  "..v.default)
+        end
+    end
 
 end
 
