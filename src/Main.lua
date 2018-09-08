@@ -5,18 +5,19 @@ function resourceStartNotify ( resourcename )
 end
 
 function init()
-
+    print(get("dbUrl"))
+    DB.init()
 end
 
 function joinMessage()
     local name = getPlayerName(source);
     msg("#FF0000"..name.." entrou no servidor!")
     source:msg("Teste")
-    debugPlayer()
+    debug(DB.conn)
 end
 
-function debugPlayer()
-    for key,value in pairs(Player) do
+function debug(elem)
+    for key,value in pairs(elem) do
         outputConsole("found member " .. key .. " - "..type(value));
     end
 end

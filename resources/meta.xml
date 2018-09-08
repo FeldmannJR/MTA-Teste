@@ -2,11 +2,12 @@
     <info author="Eh us guri Team" type ="resource" name ="teste" description = "Servidor de teste"/>
     <script src = "src/Main.lua" type="server"/>
     <script src = "src/utils/PlayerUtils.lua" type="server"/>
+    <script src = "src/db/DB.lua" type="server"/>
     <settings>
-        <setting name="@dbUrl" value = "localhost"/>
+        <setting name="@dbHost" value = "localhost"/>
         <setting name="@dbUser" value = "root"/>
-        <setting name="@dbPassword" value = "123"/>
-        <setting name="@dbName" value = "mtalocalhost"/>
+        <setting name="@dbPassword" value = "batata123"/>
+        <setting name="@dbName" value = "mta"/>
     </settings>
     <oop>true</oop>
 </meta>
