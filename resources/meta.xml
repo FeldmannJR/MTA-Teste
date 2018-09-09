@@ -1,0 +1,15 @@
+   <info author="Eh us guri Team" type ="resource" name ="teste" description = "Servidor de teste"/>
+    <script src = "src/utils/PlayerUtils.lua"/>
+    <script src = "src/utils/LuaUtils.lua"/>
+    <script src = "src/db/DB.lua" type="server"/>
+    <script src = "src/Main.lua" type="server"/>
+    <script src = "src/server/db/DB.lua" type="server"/>
+    <script src = "src/server/Main.lua" type="server"/>
+    <script src = "src/client/VehicleLoader.lua" type = "client"/>
+    <settings>
+        <setting name="@dbHost" value = "localhost"/>
+        <setting name="@dbUser" value = "root"/>
+        <setting name="@dbPassword" value = "batata123"/>
+        <setting name="@dbName" value = "mta"/>
+    </settings>
+    <oop>true</oop>
