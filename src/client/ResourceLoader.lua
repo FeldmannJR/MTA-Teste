@@ -1,5 +1,6 @@
 carros = {
-    [415] = "kadett"
+    [415] = "kadett",
+    [541] = "golg2"
 }
 skins = {
     [1] = "Lula",
