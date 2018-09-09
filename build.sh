@@ -4,7 +4,7 @@ DIRNAME=$(basename "$SCRIPTPATH")
 rm -rf "${SCRIPTPATH}/dist"
 mkdir -p "${SCRIPTPATH}/dist"
 
-
+cd ${SCRIPTPATH}
 #Zipando os arquivos de resources sem o meta.xml
 zip -r "./dist/${DIRNAME}.zip" "resources/" -x *meta.xml*
 #Adicionado para o zip o código fonte
