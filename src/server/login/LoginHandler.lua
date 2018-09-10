@@ -1,7 +1,8 @@
 function loginPlayer(user,password)
-    msg(getPlayerName(client).." "..user.." - "..password)
+    msg(getPlayerName(client).." pediu pra logar!")
+    triggerClientEvent(client,"receiveLogin",client,"success")
 end
 
 
-addEvent("onLoginEnter",true)
-addEventHandler("onLoginEnter",resourceRoot,loginPlayer)
+addEvent("submitLogin",true)
+addEventHandler("submitLogin",getRootElement(),loginPlayer)

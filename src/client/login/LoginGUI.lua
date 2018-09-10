@@ -9,35 +9,46 @@ restoX = (1-tamX)/2
 login_label = guiCreateLabel(restoX,0.1,tamX,0.2,"Eh us guri",true,login_gui)
 guiLabelSetHorizontalAlign(login_label,"center")
 guiLabelSetVerticalAlign(login_label,"center")
-
 Y = startY
 user = guiCreateEdit(restoX, startY, tamX, tamY ,"",true,login_gui)
-user_label = guiCreateLabel(restoX,startY-0.05,tamX,0.05,"Usuario",true,login_gui)
+user_label = guiCreateLabel(restoX+0.01,startY-0.05,tamX,0.05,"Usuario",true,login_gui)
 guiLabelSetHorizontalAlign(user_label,"left")
 guiLabelSetVerticalAlign(user_label,"center")
-
 Y = Y + tamY
+pass_label = guiCreateLabel(restoX+0.01,Y+espaco-0.05,tamX,0.05,"Senha",true,login_gui)
+guiLabelSetHorizontalAlign(pass_label,"left")
+guiLabelSetVerticalAlign(pass_label,"center")
 password = guiCreateEdit(restoX,Y+espaco ,tamX, tamY,"",true,login_gui)
 Y= Y + tamY + espaco
 guiEditSetMaxLength(user, 50)
 guiEditSetMaxLength(password, 50)
 guiEditSetMasked(password, true)
-button = guiCreateButton(0.1,0.7,0.8,0.2,"LOGIN",true,login_gui)
-guiSetVisible(login_gui,false);  
-addEventHandler("onClientGUIClick",button,clickButton,false)
+login_button = guiCreateButton(0.1,0.7,0.8,0.2,"LOGIN",true,login_gui)
+guiSetVisible(login_gui,false); 
 
 
-function clickButton(button,state)
+function clickLoginButton(button,state)
     if button == "left" and state == "up" then
         local i_user = guiGetText(user)
         local i_password = guiGetText(password)
-
-        triggerServerEvent("onLoginEnter",resourceRoot,i_user,i_password)
-        showCursor(false)
-        guiSetVisible(login_gui,false)
-        guiSetInputEnabled(false)
-
+        local hashedPassword = passwordHash(i_password,"bcrypt",{});
+        triggerServerEvent("submitLogin",getRootElement(),i_user,hashePassword)
+        guiEditSetReadOnly(user, true);
+        guiEditSetReadOnly(password, true);
+        
     end
+end
+
+function loginSuccess()
+    showCursor(false)
+    guiSetVisible(login_gui,false)
+    guiSetInputEnabled(false)
+end
+
+function loginError(erro)
+    guiEditSetReadOnly(user, false)
+    guiEditSetReadOnly(password, false)
+    guiSetText("#FF0000"..erro)
 end
 
 function open()
@@ -46,5 +57,14 @@ function open()
     showCursor(true)
 end
 
+function handleLoginCallback(tipo,msg)
+    loginSuccess()
+    outputChatBox(tipo);
+end
+
+addEvent("receiveLogin",true);
+addEventHandler("receiveLogin",localPlayer,handleLoginCallback)
+
+addEventHandler("onClientGUIClick",login_button,clickLoginButton,false)
 addEventHandler ( "onClientResourceStart", getResourceRootElement(getThisResource()), open)
 
