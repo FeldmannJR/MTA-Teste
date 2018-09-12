@@ -42,15 +42,14 @@ function validate(user,password,event)
 end
 
 -- https://wiki.multitheftauto.com/wiki/Resource:Editor/EDF
-function playerLogged(client,user)
-    DB.getPlayerData(client,function(c,data)
-        if data == nil then return end
-        local x,y,z,r = getDefaultSpawn()
-        print(tostring(x).." "..tostring(y).." "..tostring(z))
-        spawnPlayer(client,x,y,z,r,data.skin)
-        fadeCamera(client,true)
-        setCameraTarget(client,client)
-      end)
+function playerLogged(c,user)
+    local data = DB.getPlayerData(c)
+    if data == nil then return end
+    local x,y,z,r = getDefaultSpawn()
+    print(tostring(x).." "..tostring(y).." "..tostring(z))
+    spawnPlayer(client,x,y,z,r,data.skin)
+    fadeCamera(client,true)
+    setCameraTarget(client,client)  
 end
 
 function downloadedResource()

@@ -36,7 +36,7 @@ function DB.getPlayerData(client)
     nome = data.user
     if playerCache[nome] then return playerCache[nome] end
     qh =  DB.conn:query("SELECT * FROM players WHERE `name` = ?",nome)
-    local rs = dbPoll(qh,0)
+    local rs = dbPoll(qh,-1)
     if #rs<=0 then
         return nil
     end 
@@ -45,7 +45,7 @@ function DB.getPlayerData(client)
     for k,v in pairs(PlayerStruct) do
         pData[k] = row[k]
     end
-    playerCache[nome] = pData[]
+    playerCache[nome] = pData
     return pdata
 end
 
