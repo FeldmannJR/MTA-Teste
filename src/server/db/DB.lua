@@ -3,6 +3,8 @@ DB = {}
 PlayerStruct = {
     money = {type = "INTEGER", default = "NOT NULL DEFAULT 0"},
     carro = {type = "TEXT", default = "NULL"},
+    location = {type ="VARCHAR(50)",default = "NULL"},
+    skin = {type = "INTEGER",default = "NOT NULL DEFAULT 36"}
 }
 
 function DB.init()
@@ -27,6 +29,26 @@ function DB.alterTables()
 
 end
 
+function DB.getPlayerData(client,callback)
+    data = sessions[client]
+    if data==nil then callback(client,nil) return nil end
+    nome = data.user
+    dbQuery(function(qh,client)
+        local rs = dbPoll(qh,0)
+        if #rs<=0 then
+            callback(client,nil) 
+            return
+        end 
+        row = rs[1]
+        local pData = {}
+        for k,v in pairs(PlayerStruct) do
+            pData[k] = row[k]
+        end
+        callback(client,pData)
+    end,DB.conn,"SELECT * FROM players WHERE `name` = ?",nome)
+
+end
+
 function DB.logIn(client,user,password)
     dbQuery(function(qh) 
         local rs = dbPoll(qh,0);
@@ -37,6 +59,7 @@ function DB.logIn(client,user,password)
                 sessions[client].logintime = getRealTime().timestamp
                 logIn(client,getAccount(user),row.password)
                 triggerClientEvent(client, "receiveLogin" ,client,"success")
+                triggerEvent("playerLoggedinEvent",getRootElement(),client,user)
             else
                 triggerClientEvent(client, "receiveLogin" ,client,"error","Senha inválida!");
             end
@@ -65,7 +88,6 @@ function DB.getColumns(tabela)
     local rs = query:poll(-1)
     local columns = {}
     for rid, row in ipairs (rs) do 
-        print(toJSON(row))
         columns[#columns+1] = row["Field"]
     end
     return columns;

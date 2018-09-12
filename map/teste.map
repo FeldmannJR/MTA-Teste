@@ -1,0 +1,4 @@
+<map edf:definitions="Teste">
+    <spawnpoint id="spawnpoint (1)" posX="1761.3" posY="-1890.7" posZ="13.5" rot="0"></spawnpoint>
+    <bike id="bike (1)" posX="1763" posY="-1901.3" posZ="12.6"></bike>
+</map>

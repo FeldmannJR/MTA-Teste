@@ -1,4 +1,4 @@
-    <info author="Eh us guri Team" type ="resource" name ="teste" description = "Servidor de teste"/>
+    <info author="Eh us guri Team" type ="resource" name ="teste" description = "Servidor de teste" edf:definition="resources/map/teste.edf" />
     <settings>
         <setting name="@dbHost" value = "localhost"/>
         <setting name="@dbUser" value = "root"/>
@@ -6,3 +6,4 @@
         <setting name="@dbName" value = "mta"/>
     </settings>
     <oop>true</oop>
+    <include resource="Mapa"/>

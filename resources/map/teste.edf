@@ -1,0 +1,11 @@
+<def name = "Teste">
+    <element name="spawnpoint" friendlyname="Spawnpoint">
+        <object editorOnly="true" model="3092" posZ="1" />
+        <data name="position" type="coord3d" default="0,0,0" />
+        <data name="rotation" type="coord3d" default="0,0,0" />
+    </element>
+    <element name="bike" friendlyname="Bikespawn">
+        <data name="position" type="coord3d" default="0,0,0" />
+        <marker editorOnly = "true" size = "3" type = "cylinder" color="#FFFFFF" />
+     </element>
+</def>

@@ -1,4 +1,5 @@
 waiting = false
+logado = false
 
 function startLoginGUI()
     window = guiCreateWindow(0.4,0.2,0.25,0.5,"Contas",true)
@@ -137,6 +138,7 @@ function loginSuccess()
     showCursor(false)
     guiSetVisible(window,false)
     guiSetInputEnabled(false)
+    logado = true
 end
 
 function open()
