@@ -2,6 +2,7 @@ waiting = false
 logado = false
 
 function startLoginGUI()
+    loginbg = guiCreateStaticImage(0,0,1,1,"resources/imgs/login/bg.jpg",true)
     window = guiCreateWindow(0.4,0.2,0.25,0.5,"Contas",true)
     tabPanel = guiCreateTabPanel(0,0.05,1,1,true,window)
     guiSetAlpha(window,1)
@@ -35,12 +36,21 @@ function startLoginGUI()
     guiEditSetMaxLength(user, 32)
     guiEditSetMaxLength(password, 32)
     guiEditSetMasked(password, true)
+    
+    -- Remember
+    remember = guiCreateCheckBox(0.37,Y+0.03,0.25,0.05,"Lembrar senha",false,true,login_gui)
+    
     --Login error
-    login_error = guiCreateLabel(restoX,0.7,tamX,0.05,"",true,login_gui)
+    login_error = guiCreateLabel(restoX,0.6,tamX,0.05,"",true,login_gui)
     guiLabelSetHorizontalAlign(login_error,"center")
     guiLabelSetVerticalAlign(login_error,"center")
+
+    -- AUto login button
+    autologin_button = guiCreateButton(0.1,0.7,0.8,0.1,"Auto Login",true,login_gui)
+    guiSetVisible(autologin_button,false)
+
     --Login button
-    login_button = guiCreateButton(0.1,0.8,0.8,0.1,"LOGIN",true,login_gui)
+    login_button = guiCreateButton(0.1,0.85,0.8,0.1,"LOGIN",true,login_gui)
 
 
     
@@ -80,7 +90,9 @@ function startLoginGUI()
     register_button = guiCreateButton(restoX,0.85,tamX,0.1,"Registrar",true,register_gui)
 
     guiSetVisible(window,false); 
+    guiSetVisible(loginbg,false)
 
+    addEventHandler("onClientGUIClick",autologin_button,clickAutoLoginButton,false)
     addEventHandler("onClientGUIClick",login_button,clickLoginButton,false)
     addEventHandler("onClientGUIClick",register_button,clickRegisterButton,false)
 
@@ -113,7 +125,20 @@ function clickLoginButton(button,state)
         local i_user = guiGetText(user)
         local i_password = guiGetText(password)
         if i_user and i_password then
-              triggerServerEvent("submitLogin",getRootElement(),i_user,i_password)
+            triggerServerEvent("submitLogin",getRootElement(),i_user,i_password,guiCheckBoxGetSelected(remember))
+            guiEditSetReadOnly(user, true);
+            guiEditSetReadOnly(password, true);
+            waiting = true
+        end
+    end
+end
+
+function clickAutoLoginButton(button,state)
+    if waiting then return end
+    if button == "left" and state == "up" then
+        local i_user,i_token = getAutoLogin()
+        if i_user and i_token then
+            triggerServerEvent("submitAutoLogin",getRootElement(),i_user,i_token)
             guiEditSetReadOnly(user, true);
             guiEditSetReadOnly(password, true);
             waiting = true
@@ -137,19 +162,51 @@ end
 function loginSuccess()
     showCursor(false)
     guiSetVisible(window,false)
+    guiSetVisible(loginbg,false)
     guiSetInputEnabled(false)
     logado = true
+    disableHud()
+end
+
+function getAutoLogin()
+    local tokfile = fileOpen("logintoken.txt")
+    if tokfile then 
+        local cont = fileRead(tokfile,120);
+        if cont then
+            local spl = split(cont,";")
+            if #spl == 2 then
+                autologin_user = spl[1]
+                autologin_token = spl[2]
+                fileClose(tokfile)
+                return autologin_user,autologin_token
+            end
+        end
+        fileClose(tokfile)
+   
+    end
+    return nil
 end
 
 function open()
+    guiSetVisible(loginbg,true)
     guiSetVisible(window,true);    
     guiSetInputEnabled(true)
     showCursor(true)
+    userAuto = getAutoLogin()
+    if userAuto then
+        guiSetText(autologin_button,"Entrar como "..userAuto)
+        guiSetVisible(autologin_button,true)
+    end
 end
 
 function handleLoginCallback(tipo,msg)
     if tipo == "success" then
         loginSuccess()
+        if msg then
+            local file = fileCreate("logintoken.txt")
+            fileWrite(file,guiGetText(user)..";"..msg)
+            fileClose(file)
+        end
     elseif tipo == "error" then
         loginError(msg)
     end
@@ -169,6 +226,17 @@ function handleRegisterCallback(tipo,msg)
         waiting = false
     end
 end
+function handleAutoLogin(res)
+    if res =="invalid" then
+        loginError("Chave de autenticação inválida!")
+        guiSetVisible(autologin_button,false)
+        fileDelete("logintoken.txt")
+        return
+    end
+    if res == "success" then
+        loginSuccess()
+    end        
+end
 
 
 
@@ -176,6 +244,10 @@ startLoginGUI()
 
 addEvent("receiveLogin",true);
 addEventHandler("receiveLogin",localPlayer,handleLoginCallback)
+
+addEvent("receiveAutoLogin",true);
+addEventHandler("receiveAutoLogin",localPlayer,handleAutoLogin)
+
 
 addEvent("receiveRegister",true);
 addEventHandler("receiveRegister",localPlayer,handleRegisterCallback)

@@ -15,6 +15,24 @@ function addBikes()
     end
 end
 
+function getDefaultSpawn()
+	local spawn = getElementsByType("spawnpoint")
+	local x,y,z,r
+	for key, value in pairs(spawn) do
+		x = getElementData(value, "posX")
+		y = getElementData(value, "posY")
+		z = getElementData(value, "posZ")
+		r = getElementData(value, "rot")
+    end
+	return x,y,z,r
+end
+
+function addSpawn()
+    local x,y,z = getDefaultSpawn()
+    createMarker(x,y,z,"corona",0.5,138, 255, 109)
+    createBlip(x,y,z,56)
+end
+
 
 function hitBike(thePlayer,m)
     if getElementType(thePlayer) ~= "player" then return end
@@ -30,3 +48,7 @@ function hitBike(thePlayer,m)
     warpPedIntoVehicle(thePlayer,moto)
 end
 
+function initMap()
+    addBikes()
+    addSpawn()
+end
