@@ -3,7 +3,9 @@ DB = {}
 PlayerStruct = {
     money = {type = "INTEGER", default = "NOT NULL DEFAULT 0"},
     carro = {type = "TEXT", default = "NULL"},
-    location = {type ="VARCHAR(50)",default = "NULL"},
+    location = {type ="VARCHAR(255)",default = "NULL",
+        loadFunction = fromJSON,
+        updateFunction = toJSON},
     skin = {type = "INTEGER",default = "NOT NULL DEFAULT 36"}
 }
 
@@ -30,11 +32,32 @@ function DB.alterTables()
 
 end
 
+function DB.savePlayerData(data,...)
+    if #arg == 0 then return end
+    local nome = data.user
+    local x = 0
+    local query = "UPDATE players SET "
+    pData = {}
+    for k,v in ipairs(arg) do
+        if x ~= 0 then 
+            query = query..", " 
+        end
+        table.insert(pData,PlayerStruct[v].updateFunction(data[v]))
+        query = query..v.."=?"
+        x = x+1
+    end
+    table.insert(pData,nome)
+    query = query.." WHERE name = ?"
+    print(toJSON(pData))
+    dbExec(DB.conn,query,unpack(pData))
+
+end
+
 function DB.getPlayerData(client)
-    data = sessions[client]
+    local data = sessions[client]
     if data==nil then return nil end
     nome = data.user
-    if playerCache[nome] then return playerCache[nome] end
+    if playerCache[nome] ~= nil then return playerCache[nome] end
     qh =  DB.conn:query("SELECT * FROM players WHERE `name` = ?",nome)
     local rs = dbPoll(qh,-1)
     if #rs<=0 then
@@ -42,11 +65,16 @@ function DB.getPlayerData(client)
     end 
     row = rs[1]
     local pData = {}
+    pData.user = nome
     for k,v in pairs(PlayerStruct) do
-        pData[k] = row[k]
+        if v.loadFunction ~= nil then
+            pData[k] = v.loadFunction(row[k])
+        else
+            pData[k] = row[k]
+        end
     end
     playerCache[nome] = pData
-    return pdata
+    return pData
 end
 
 

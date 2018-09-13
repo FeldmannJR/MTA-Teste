@@ -41,23 +41,12 @@ function validate(user,password,event)
     return true
 end
 
--- https://wiki.multitheftauto.com/wiki/Resource:Editor/EDF
-function playerLogged(c,user)
-    local data = DB.getPlayerData(c)
-    if data == nil then return end
-    local x,y,z,r = getDefaultSpawn()
-    print(tostring(x).." "..tostring(y).." "..tostring(z))
-    spawnPlayer(client,x,y,z,r,data.skin)
-    fadeCamera(client,true)
-    setCameraTarget(client,client)  
-end
-
 function downloadedResource()
     triggerClientEvent(client,"openLogin",client)
 end
 
+
 addEvent("playerLoggedinEvent")
-addEventHandler("playerLoggedinEvent",getRootElement(),playerLogged)
 
 addEvent("submitLogin",true)
 addEventHandler("submitLogin",getRootElement(),loginPlayer)
