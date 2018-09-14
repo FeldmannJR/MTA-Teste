@@ -2,7 +2,7 @@ DB = {}
 
 PlayerStruct = {
     money = {type = "INTEGER", default = "NOT NULL DEFAULT 0"},
-    carro = {type = "TEXT", default = "NULL"},
+    vehicles = {type = "TEXT", default = "{}"},
     location = {type ="VARCHAR(255)",default = "NULL",
         loadFunction = fromJSON,
         updateFunction = toJSON},
