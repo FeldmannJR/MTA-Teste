@@ -16,17 +16,17 @@ function checkVehicle(veh)
         local vehId = getElementModel(veh)
         if hasValue(vehiclesWithoutFuel,vehId) then return end
         local consumo = getVehicleFuelData(vehId)
-        local lastCheck = data.lastCheck    
         local data = getVehicleData(veh)
+        local lastCheck = data.lastCheck    
         if data.fuel <= 0 then
             setVehicleEngineState(veh,false)
             sendMessageInVehicle(veh,"#FF0000Acabou a gasolina do carro! Va em um posto abastecer!")
-        do
+        end
         if (not lastCheck) or ((lastCheck+1500)<getTickCount()) then 
             data.lastCheck = getTickCount()
             setFuel(veh, data.fuel-consumo.fuelPerSecond)
             sendMessageInVehicle(veh,tostring(data.fuel))
-        do
+        end
     end
 end
 
@@ -35,6 +35,8 @@ function getVehicleData(veh)
     if vehiclesData[veh] then
         return vehiclesData[veh]
     else
+        local vehId = getElementModel(veh)
+        local consumo = getVehicleFuelData(vehId)
         return {fuel = consumo.maxFuel}
     end
   

@@ -2,7 +2,7 @@ DB = {}
 
 PlayerStruct = {
     money = {type = "INTEGER", default = "NOT NULL DEFAULT 0"},
-    carro = {type = "TEXT", default = "NULL"},
+    vehicle = {type = "TEXT", default = "NULL"},
     location = {type ="VARCHAR(255)",default = "NULL",
         loadFunction = fromJSON,
         updateFunction = toJSON},
@@ -67,7 +67,7 @@ function DB.getPlayerData(client)
     local pData = {}
     pData.user = nome
     for k,v in pairs(PlayerStruct) do
-        if v.loadFunction ~= nil then
+        if v.loadFunction ~= nil and row[k] then
             pData[k] = v.loadFunction(row[k])
         else
             pData[k] = row[k]

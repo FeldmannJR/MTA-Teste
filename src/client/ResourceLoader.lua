@@ -31,7 +31,7 @@ function loadAnims()
 end
 function convertVehicles()
     listV = {}
-    for k,v in vehicleList do
+    for k,v in ipairs(vehicleList) do
         if v.load then 
             listV[k] = v.nome
         end
