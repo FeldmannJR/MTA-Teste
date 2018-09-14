@@ -14,6 +14,7 @@ function playerLogged(c,user)
     spawnPlayer(c,x,y,z,r,data.skin)
     fadeCamera(c,true)
     setCameraTarget(c,c)  
+    bindKeys(c)
 end
 
 function savePlayerLoc(source)
@@ -34,6 +35,10 @@ function onDisable(re)
     for k,player in ipairs(getElementsByType("player")) do
         savePlayerLoc(player)
     end
+end
+
+function bindKeys(pl)
+    bindKey(pl,"x","up",turnEngine)
 end
 
 addEventHandler("onResourceStop",resourceRoot,onDisable)

@@ -1,7 +1,3 @@
-carros = {
-    [415] = "kadett",
-    [541] = "golg2"
-}
 skins = {
     [1] = "Lula",
     [9] = "Dilma",
@@ -33,9 +29,18 @@ function loadAnims()
     outputDebugString("Anims loaded")
 
 end
+function convertVehicles()
+    listV = {}
+    for k,v in vehicleList do
+        if v.load then 
+            listV[k] = v.nome
+        end
+    end
+    return listV
+end
 
 function load()
-    loadTxts(carros,"vehicles")
+    loadTxts(convertVehicles(),"vehicles")
     loadTxts(skins,"skins")
     loadTxts(weapons,"weapons")
    -- loadAnims()

@@ -29,6 +29,13 @@ function hitBike(thePlayer,m)
     warpPedIntoVehicle(thePlayer,moto)
 end
 
+function removeBike(thePlayer)
+    if motos[thePlayer] then
+        destroyElement(motos[thePlayer])
+        motos[thePlayer] = nil
+    end
+
+end
 
 function getDefaultSpawn()
 	local spawn = getElementsByType("spawnpoint")
@@ -48,8 +55,8 @@ function addSpawn()
     createBlip(x,y,z,56,2,0,0,0,1,1,200)
 end
 
-
 function initMap()
     addBikes()
     addSpawn()
+
 end
