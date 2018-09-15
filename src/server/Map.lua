@@ -24,7 +24,7 @@ function hitBike(thePlayer,m)
     local x,y,z = getElementPosition(thePlayer)
     y = y + 0.01
     local rx,ry,rz = getElementRotation(thePlayer)
-    moto = createVehicle(463,x,y,z,rx,ry,rz,"DEUSEGAY")
+    moto = createVehicle(509,x,y,z,rx,ry,rz,randomPlate())
     motos[thePlayer] = moto
     warpPedIntoVehicle(thePlayer,moto)
 end

@@ -11,10 +11,14 @@ function playerLogged(c,user)
             z = loc.z
         end
     end
-    spawnPlayer(c,x,y,z,r,data.skin)
+    spawnPlayer(c,x,y,z,r,randomSkin())
     fadeCamera(c,true)
     setCameraTarget(c,c)  
     bindKeys(c)
+    createBlipAttachedTo(c,0,2,0,255,0)
+    if not data.vehicles or #data.vehicles==0 then
+        addVehicle(c,getCarId("kadett"),{r=math.random(0,255),g=math.random(0,255),b=math.random(0,255)})    
+    end 
 end
 
 function savePlayerLoc(source)
@@ -39,7 +43,15 @@ end
 
 function bindKeys(pl)
     bindKey(pl,"x","up",turnEngine)
+    bindKey(pl,"z","up",function(thePlayer)
+       alternatePlayerVehicle(thePlayer,1)
+    end)
 end
+
+
+addEventHandler("onPlayerWasted",getRootElement(), function()
+    setTimer( spawnPlayer, 2000, 1, source, getDefaultSpawn())
+end)
 
 addEventHandler("onResourceStop",resourceRoot,onDisable)
 addEventHandler("onPlayerQuit",getRootElement(),playerQuit)

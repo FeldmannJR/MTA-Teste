@@ -1,7 +1,3 @@
-vehiclesWithoutFuel = {
-    509,481,510
-}
-
 vehiclesData = {}
 
 function fuelTick() 
@@ -14,8 +10,8 @@ end
 function checkVehicle(veh)
     if getVehicleEngineState(veh) then
         local vehId = getElementModel(veh)
-        if hasValue(vehiclesWithoutFuel,vehId) then return end
         local consumo = getVehicleFuelData(vehId)
+        if consumo.maxFuel == 0 then return end
         local data = getVehicleData(veh)
         local lastCheck = data.lastCheck    
         if data.fuel <= 0 then
@@ -49,6 +45,9 @@ function getVehicleFuelData(vehId)
     return defaultFuel
 end
 
+function getMaxFuel(vehId)
+    return getVehicleFuelData(vehId).maxFuel
+end
 
 function setFuel(veh,fuel)
     local data = getVehicleData(veh)
@@ -57,10 +56,18 @@ function setFuel(veh,fuel)
     vehiclesData[veh] = data
 end
 
+function getFuel(veh)
+   return getElementData(veh,"fuel")
+end
+
 
 function turnEngine(thePlayer)
     local veh =  getPedOccupiedVehicle(thePlayer)
     if veh then
+        if getMaxFuel(getElementModel(veh)) == 0 then
+            thePlayer:msg("#FF0000Este veiculo não tem tanque de combustivel!")
+            return
+        end
         local slot =  getPedOccupiedVehicleSeat(thePlayer)
         if slot and slot == 0 then
             local data = getVehicleData(veh)
@@ -79,4 +86,13 @@ function turnEngine(thePlayer)
     end
 end
 
+function encheVehicle(thePlayer)
+    local veh =  getPedOccupiedVehicle(thePlayer)
+    if veh then
+        setFuel(veh,getMaxFuel(getModelId))
+        thePlayer:msg("#FF00FF Enchi o tanque chefia!!")
+    end
+end
+
+addCommandHandler("fuel",encheVehicle)
 setTimer(fuelTick,500,0)

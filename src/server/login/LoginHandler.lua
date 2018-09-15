@@ -2,6 +2,12 @@ sessions = {}
 
 function loginPlayer(user,password,tok)
      if not validate(user,password,"receiveLogin") then return end
+     for k,v in pairs(sessions) do
+        if v.user == user then 
+            triggerClientEvent(client,"receiveLogin",client,"error","Usuario já está online!")
+            return
+        end
+    end
      DB.logIn(client,user,password,tok)
 end
 function loginAutoPlayer(user,tok)
@@ -45,8 +51,20 @@ function downloadedResource()
     triggerClientEvent(client,"openLogin",client)
 end
 
+function isAuthed(thePlayer)
+    return sessions[thePlayer] ~= nil
+end
+
+function playerQuitLogin(type)
+    if isAuthed(thePlayer) then
+        sessions[thePlayer] = nil
+    end
+end
+
 
 addEvent("playerLoggedinEvent")
+
+addEventHandler("onPlayerQuit",getRootElement(),playerQuitLogin)
 
 addEvent("submitLogin",true)
 addEventHandler("submitLogin",getRootElement(),loginPlayer)

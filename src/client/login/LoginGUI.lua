@@ -165,6 +165,7 @@ function loginSuccess()
     guiSetVisible(loginbg,false)
     guiSetInputEnabled(false)
     logado = true
+    stopSound(loginSound)
     disableHud()
 end
 
@@ -188,6 +189,7 @@ function getAutoLogin()
 end
 
 function open()
+    loginSound = playSound("resources/sounds/login.mp3",true)
     guiSetVisible(loginbg,true)
     guiSetVisible(window,true);    
     guiSetInputEnabled(true)

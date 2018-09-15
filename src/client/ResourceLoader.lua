@@ -1,9 +1,3 @@
-skins = {
-    [1] = "Lula",
-    [9] = "Dilma",
-    [36] = "Bolsonaro"
-}
-
 weapons = {
     [336] = "pixuleco"
 }
@@ -30,10 +24,10 @@ function loadAnims()
 
 end
 function convertVehicles()
-    listV = {}
-    for k,v in ipairs(vehicleList) do
+    local listV = {}
+    for k,v in pairs(vehicleList) do
         if v.load then 
-            listV[k] = v.nome
+            listV[k] = v.name
         end
     end
     return listV

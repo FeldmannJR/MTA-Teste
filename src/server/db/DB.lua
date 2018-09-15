@@ -2,14 +2,14 @@ DB = {}
 
 PlayerStruct = {
     money = {type = "INTEGER", default = "NOT NULL DEFAULT 0"},
-<<<<<<< HEAD
-    vehicle = {type = "TEXT", default = "NULL"},
-=======
-    vehicles = {type = "TEXT", default = "{}"},
->>>>>>> 10060c903f841e16f8e2806843647b0bb6c2fb8e
+    vehicles = {type = "TEXT", default = "NULL",
+        loadFunction = fromJSON,
+        updateFunction = toJSON
+    },
     location = {type ="VARCHAR(255)",default = "NULL",
         loadFunction = fromJSON,
-        updateFunction = toJSON},
+        updateFunction = toJSON
+    },
     skin = {type = "INTEGER",default = "NOT NULL DEFAULT 36"}
 }
 
@@ -46,13 +46,18 @@ function DB.savePlayerData(data,...)
         if x ~= 0 then 
             query = query..", " 
         end
-        table.insert(pData,PlayerStruct[v].updateFunction(data[v]))
+        local upFunc = PlayerStruct[v].updateFunction
+        local value = data[v]
+        if upFunc then
+            value = upFunc(value)
+        end 
+        print(toJSON(PlayerStruct[v]))
+        table.insert(pData,value)
         query = query..v.."=?"
         x = x+1
     end
     table.insert(pData,nome)
     query = query.." WHERE name = ?"
-    print(toJSON(pData))
     dbExec(DB.conn,query,unpack(pData))
 
 end
