@@ -1,7 +1,7 @@
-defaultFuel = {maxFuel = 50, fuelPerSecond = 0.5}
+defaultFuel = {maxFuel = 50 , fuelPerSecond = 0.05}
 
 vehicleList = {
-    [415] = {name = "kadett",   maxFuel = 50,   fuelPerSecond = 0.5,load = true},
+    [415] = {name = "kadett",   maxFuel = 70,   fuelPerSecond = 0.09,load = true},
     [436] = {name = "golg2", maxFuel = 50, fuelPerSecond = 0.4,load = true},
     [509] = {maxFuel = 0},
     [510] = {maxFuel = 0},
@@ -20,6 +20,22 @@ function randomPlate()
     end
     
     return plate
+end
+
+function getCarName(id)
+    for k,v in pairs(vehicleList) do
+        if (k == id) then
+            return v.name
+        end
+    end
+    return false
+end
+
+function getVehicleFuelData(vehId)
+    if vehicleList[vehId] then
+        return vehicleList[vehId]
+    end
+    return defaultFuel
 end
 
 function getCarId(name)

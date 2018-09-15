@@ -20,8 +20,13 @@ function checkVehicle(veh)
         end
         if (not lastCheck) or ((lastCheck+1500)<getTickCount()) then 
             data.lastCheck = getTickCount()
-            setFuel(veh, data.fuel-consumo.fuelPerSecond)
-            sendMessageInVehicle(veh,tostring(data.fuel))
+            local speed = getElementSpeed(veh,1)
+            local gasto = (consumo.fuelPerSecond/2)
+            if speed <= 1 then
+                gasto = 0.005
+            end
+            
+            setFuel(veh, data.fuel-gasto)
         end
     end
 end
@@ -38,12 +43,6 @@ function getVehicleData(veh)
   
 end
 
-function getVehicleFuelData(vehId)
-    if vehicleList[vehId] then
-        return vehicleList[vehId]
-    end
-    return defaultFuel
-end
 
 function getMaxFuel(vehId)
     return getVehicleFuelData(vehId).maxFuel

@@ -21,8 +21,6 @@ function registerPlayer(user,password)
     DB.register(client,user,password)        
 end
 
-
-
 function validate(user,password,event)
     if not user or not password then
         triggerClientEvent(client,event,client,"error","Ocorreu um erro inesperado!")
